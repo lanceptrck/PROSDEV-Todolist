@@ -1,4 +1,18 @@
+<?php
+  session_start();
+  include 'functions.php';
+  loadAll();
+  $searched = "";
+  if(isset($_SESSION["username"])){
+    $loggedIn_account = getAccount($_SESSION["username"]);
 
+  }
+  else{
+    echo "You are not logged in.";
+    header('Refresh: 2; URL=index.php');
+    exit; 
+  }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +24,7 @@
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
         <!-- Link to CSS file -->
-        <link rel="stylesheet" href="TaskMainPage.css">
+        <link rel="stylesheet" href="css/index.css">
         <link rel="shortcut icon" href="img/todoico.ico">
 
         <title>
@@ -82,11 +96,11 @@
                             <!-- Settings BUTTON -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pedro Pukingbato
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $loggedIn_account->getFullname(); ?>
                                     <span class="glyphicon glyphicon-user pull-left"></span>
                                 </a>
                                 <ul  class="dropdown-menu">
-                                    <li><a id="logoutHref" name="logoutHref" href="#">Log Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+                                    <li><a id="logoutHref" name="logoutHref" href="logout.php">Log Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="#">Settings <span class="glyphicon glyphicon-cog pull-right"></span></a></li>
                                     <li class="divider"></li>
