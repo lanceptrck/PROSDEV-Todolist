@@ -52,8 +52,9 @@ CREATE TABLE `task` (
   `status` varchar(45) NOT NULL DEFAULT 'Pending',
   `schedule` datetime DEFAULT NULL,
   `categoryID` int(11) NOT NULL,
+  `shared` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,6 +63,7 @@ CREATE TABLE `task` (
 
 LOCK TABLES `task` WRITE;
 /*!40000 ALTER TABLE `task` DISABLE KEYS */;
+INSERT INTO `task` VALUES (1,1,'qweqwe','0','0000-00-00 00:00:00',1,1),(2,1,'qweqwe','0','0000-00-00 00:00:00',1,1),(3,1,'qweqwe','0','0000-00-00 00:00:00',1,1),(4,1,'Do stuff','0','1997-07-10 09:00:00',1,1),(5,1,'Hello','0','1997-07-10 09:00:00',1,1);
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,4 +103,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-15 15:50:47
+-- Dump completed on 2016-06-17 19:30:19
