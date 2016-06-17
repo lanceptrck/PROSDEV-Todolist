@@ -6,6 +6,8 @@
   if(isset($_SESSION["username"])){
     $loggedIn_account = getAccount($_SESSION["username"]);
 
+    //include 'post_task.php';
+
   }
   else{
     echo "You are not logged in.";
@@ -126,6 +128,21 @@
                            <h4> <span class=" glyphicon glyphicon-briefcase" aria-hidden="true"></span> My Tasks <button class="btn btn-default glyphicon glyphicon-plus pull-right"> </button> </h4> 
                           <div class="row center-block">
                             <div class="col-md-10 ">
+
+                              <?php
+
+                                $myTasks = loadTaskById($loggedIn_account->getAccid());
+
+                                for($i = 0; $i<count($myTasks); $i++)
+                                {
+                                  $title = $myTasks[$i]->getTitle();
+                                  $sched = $myTasks[$i]->getSchedule();
+                                  echo "<li class='list-group-item'> " . $title ." due on " . $sched .  " <button class='btn btn-default glyphicon glyphicon-remove pull-right deleteMe'> </button> </li> </li>";
+                                }
+
+                              ?>
+                 
+
                             
                             </div>
                           </div>
@@ -200,7 +217,7 @@
       <div class="modal-body">
               <div>
               <div class="row">
-                <form>
+                <form method = "POST" action = "post_task.php">
                   <div class="col-md-3"></div>
                   <div class="col-md-6">
                     <div class="card">
@@ -210,8 +227,10 @@
             
                             <div class="col-md-10 ">
                               <fieldset class="form-group">
-                                <input type="text" class="form-control margin12" id="task" placeholder="Name of your task">
+                                <input type="text" name="taskName" class="form-control margin12" id="task" placeholder="Name of your task">
                                 <input type="datetime-local" class="form-control margin12" id="taskDate" name="taskDate">
+                               </label>
+                                
                               </fieldset>
                             </div>
                
@@ -221,13 +240,14 @@
                     </div>
                   </div>
                   <div class="col-md-3"></div>
-              </form>
               </div>
             </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id = "addTask" data-dismiss="modal" class="btn btn-primary">Proceed</button>
+        <input type="submit" id="addTask" class="btn btn-primary" value="Proceed">
+
+                </form>
       </div>
     </div>
   </div>

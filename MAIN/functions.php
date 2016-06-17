@@ -5,6 +5,7 @@ include 'classes.php';
 $username = null;
 $password = null;	
 $accounts = array();
+$tasks = array();
 $loggedin = false;
 
 function test_input($data) {
@@ -23,6 +24,7 @@ function loadAll()
 	}
 
 	loadAccounts();
+	loadTasks();
 
 }
 
@@ -186,6 +188,54 @@ function loadAccounts()
 	$connect->close();
 }
 
+function loadTasks()
+{
+	global $tasks;
+	$tasks = null;
+	$connect= new DBConnection();
+	$connect = $connect->getInstance();	
+
+	$sql = "SELECT * FROM task";
+	$result = $connect->query($sql);
+
+	if($result->num_rows > 0)
+	{
+		while($row = $result->fetch_assoc())
+		{
+			$temp_task = new task($row['id'], $row['ownerID'], $row['title'], $row['status'], $row['schedule'], $row['categoryID'], $row['shared']);
+			$tasks[count($tasks)] = $temp_task;
+			
+		}
+
+	}
+	$connect->close();
+}
+
+function loadTaskById($userID)
+{
+
+	$myTasks = array();
+	$connect= new DBConnection();
+	$connect = $connect->getInstance();	
+
+	$sql = "SELECT * FROM task where ownerID='" . $userID ."'";
+	$result = $connect->query($sql);
+
+	if($result->num_rows > 0)
+	{
+		while($row = $result->fetch_assoc())
+		{
+			$temp_task = new task($row['id'], $row['ownerID'], $row['title'], $row['status'], $row['schedule'], $row['categoryID'], $row['shared']);
+			$myTasks[count($myTasks)] = $temp_task;
+			
+		}
+
+	}
+	$connect->close();
+
+	return $myTasks;
+}
+
 function createAccount($id, $un, $pw, $fn, $em)
 { 
 
@@ -199,6 +249,26 @@ function createAccount($id, $un, $pw, $fn, $em)
     	echo "Error: " . $sql . "<br>" . $connect->error;
     }
     else loadAll();
+
+    $connect->close();
+
+}
+
+function createTask($tID, $oID, $t, $st, $sc, $cID, $s)
+{ 
+
+	$connect = new DBConnection();
+	$connect = $connect->getInstance();
+
+	$sql = "INSERT INTO task(id, ownerID, title, status, schedule, categoryID, shared)
+	VALUES ('$tID', '$oID', '$t', '$st', '$sc', '$cID', '$s')";
+
+	if ($connect->query($sql) !== TRUE) {
+    	echo "Error: " . $sql . "<br>" . $connect->error;
+    }
+    else loadAll();
+
+    echo "fucking shit";
 
     $connect->close();
 
@@ -222,6 +292,61 @@ function getLastAccId()
 	$connect->close();
 
 	return $id;
+}
+
+function getLastTaskId()
+{
+	$id = null;
+	$connect= new DBConnection();
+	$connect = $connect->getInstance();
+
+	$sql = "SELECT MAX(id) as result FROM task";
+	$result = $connect->query($sql);
+
+	if($result->num_rows > 0)
+	{
+		$row = $result->fetch_assoc();
+		$id = $row['result'];
+	}
+
+	$connect->close();
+
+	return $id;
+}
+
+function uploadPicture($directory, $file_type, $file_name, $file_size, $file)
+{
+	$uploadOk = 1;
+
+	if($file_size > 500000)
+	{	
+		echo "File too large.";
+		$uploadOk = 0;
+	}
+
+	if($file_type != "jpg" && $file_type != "png" && $file_type != "jpeg" 
+		&& $file_type != "gif" ) {
+   		 $uploadOk = 0;
+	}
+
+	if($uploadOk == 0)
+	{
+		echo "File not uploaded.";
+		return false;
+	} else {
+		if(move_uploaded_file($file, $directory))
+		{
+			//echo "File successfully uploaded";
+			return true;
+		} else 
+		{
+			//echo "Error occured";
+			return false;
+		}
+	}
+
+
+
 }
 
 ?>
